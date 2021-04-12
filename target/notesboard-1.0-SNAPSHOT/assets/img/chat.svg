@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<svg
+	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:svgjs="http://svgjs.com/svgjs" version="1.1" width="512" height="512" x="0" y="0" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512" xml:space="preserve">
+	<g transform="matrix(-1,0,0,1,512,0)" id="message_ui_container">
+		<linearGradient
+			xmlns="http://www.w3.org/2000/svg" id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="256" x2="256" y1="496.007" y2="15.993">
+			<stop offset="0" stop-color="#a93aff"/>
+			<stop offset="1" stop-color="#ff81ff"/>
+		</linearGradient>
+		<linearGradient
+			xmlns="http://www.w3.org/2000/svg" id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="256" x2="256" y1="255.993" y2="165.993">
+			<stop offset="0" stop-color="#ffbef9"/>
+			<stop offset="1" stop-color="#fff1ff"/>
+		</linearGradient>
+		<g
+			xmlns="http://www.w3.org/2000/svg">
+			<path d="m0 480.993v-390c0-41.355 33.645-75 75-75h362c41.355 0 75 33.645 75 75v240c0 41.355-33.645 75-75 75h-325.787l-85.607 85.607c-9.414 9.416-25.606 2.748-25.606-10.607z" fill="url(#SVGID_1_)" data-original="url(#SVGID_1_)" style=""/>
+			
+		</g>
+	</g>
+</svg>

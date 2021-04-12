@@ -1,0 +1,47 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 23 Mar, 2021, 11:31:09 PM
+    Author     : 91834
+*/
+.login-card{
+    overflow: hidden;
+    background:url('../img/login_card_bg.jpg');background-size: cover;color:black; border-radius:10px; box-shadow: 1px 1px 10px 1px #848484; 
+    transition: all 0.4s;
+}
+.login-card:hover{
+    box-shadow: 1px 1px 50px 1px #848484;
+}
+.signup-card{
+    position: relative;
+    overflow: hidden;
+    background:url('../img/login_card_bg.jpg');background-size: cover;color:white; border-radius:10px; box-shadow: 1px 1px 10px 1px #848484; 
+    backdrop-filter: blur(100px);
+    transition: all 0.4s;
+}
+.underline-bacon {
+     border-radius:0px 30px 30px 0px;
+     color:white;
+     padding-bottom: 5px;
+     text-shadow:4px 1px 0px black;
+}
+
+.underline-bacon:after{
+    background: linear-gradient(to right, #bcbcbc 25%,#ffcd02 25%, #ffcd02 50%, #e84f47 50%, #e84f47 75%, #65c1ac 75%);
+  position: absolute;
+  content: '';
+  height: 8px;
+  right: 0;
+  left: 0;
+  bottom: 0;
+}
+.signup-card:hover{
+    box-shadow: 1px 1px 50px 1px #848484;
+}
+
+.dashboard-bg{
+    background: linear-gradient(#8d58d9,#2b0d56);color: white;
+}
