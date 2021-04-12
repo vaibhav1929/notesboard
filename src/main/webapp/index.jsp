@@ -63,7 +63,7 @@
                                     </div>
                                 </div>
                         </form>
-                        <form method="post" action="AccountHandler">
+                        <form method="post" action="testServlet">
                                 <div class="col-md-8 underline-bacon col-sm-12 col-xs-12 text-center"><p class=''>already have an account?<br><span  style="font-size: 30px">Login</span> </p></div>
                                 <div class="row p-2 justify-content-center">
                                    

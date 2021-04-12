@@ -53,7 +53,7 @@ public class Notes {
             this.content = set.getString("content");
             this.colorcode = set.getString("colorcode");
             this.isdeleted = set.getBoolean("isdeleted");
-            this.whendeleted = set.getTimestamp("whendeleted")+"";
+            this.whendeleted = set.getTimestamp("whendeleted").toString();
             
         } catch (SQLException ex) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
