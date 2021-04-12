@@ -45,3 +45,10 @@ and open the template in the editor.
 .dashboard-bg{
     background: linear-gradient(#8d58d9,#2b0d56);color: white;
 }
+
+.curve_bg{
+  clip-path: polygon(34% 0, 100% 0, 100% 43%, 100% 100%, 68% 100%, 0 100%, 0 75%, 0 11%, 34% 11%) ;
+  background:linear-gradient(#8d58d9,#2b0d56);
+  
+  
+}

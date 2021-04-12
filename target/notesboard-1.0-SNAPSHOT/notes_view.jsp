@@ -8,16 +8,12 @@
 
 <!DOCTYPE html>
 <html>
-    <head>
-    </head>
-    <body>
-        <button class="btn btn-info">Create Note</button>
-        <button class="btn btn-info float-right">Create Group</button>
+    <div class="container pl-5 pr-5">
+       
             <div class="row">
                 <div class="card col-md-4 col-sm-4">
                     <div class="card-body">Do tasks</div>   
                 </div>
             </div>
-        
-    </body>
+    </div>
 </html>

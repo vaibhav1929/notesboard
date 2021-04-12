@@ -111,8 +111,84 @@
         </div>
       </div>
     </nav>
-  
-                  <jsp:include page="notes_view.jsp"/>
+  <div class="header bg-primary pb-6">
+      <div class="container">
+        <div class="header-body">
+          <div class="row">
+            <div class="col-xl-6 col-md-6">
+              <div class="card card-stats">
+                <!-- Card body -->
+                <div class="card-header">
+                    <div class="icon icon-shape ni ni-single-copy-04 bg-gradient-orange text-white rounded-circle shadow">
+                        <i class="ni ni-"></i>
+                      </div>
+                    <span class="h2 font-weight-bold mb-0">Create new Note</span>
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col">
+                      <form class="col-md-12" method="post" action="saveNote">
+                          <div class="row">
+                            <div class="col-lg-12">
+                              <div class="form-group">
+                                <label class="form-control-label" for="note_title">Title</label>
+                                <input type="text" id="note_title" class="form-control" placeholder="give head to your note">
+                              </div>
+                            </div>
+                            <div class="col-lg-12">
+                              <div class="form-group">
+                                <label class="form-contro-label" for="note_content">Content</label>
+                                <textarea rows="4" class="form-control" name="note_content" id="note_content" placeholder="A few words for your note"></textarea>
+                              </div>
+                            </div>
+                              <button class="btn btn-info ml-3">Save note</button>
+                          </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+              
+           <div class="col-xl-6 col-md-6 mt-6">
+              <div class="card card-stats">
+                <!-- Card body -->
+                <div class="card-header">
+                    <div class="icon icon-shape ni ni-collection bg-gradient-primary text-white rounded-circle shadow">
+                        <i class="ni ni-"></i>
+                      </div>
+                    <span class="h2 font-weight-bold mb-0">Create new Group</span>
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col">
+                      <form class="col-md-12" method="post" action="saveGroup">
+                          <div class="row">
+                            <div class="col-lg-12">
+                              <div class="form-group">
+                                <label class="form-control-label" for="group_title">Title</label>
+                                <input type="text" id="group_title" name="group_title" class="form-control" placeholder="give head to your group">
+                              </div>
+                            </div>
+                              <button class="btn btn-info ml-3">Save group</button>
+                          </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+              
+          </div>
+        </div>
+      </div>
+    </div>
+                  <div class="header mt--4">
+                      <div class="continer">
+                      <jsp:include page="notes_view.jsp"/>
+                      </div>
+                  </div>
+                  
         <script src="assets/js/jquery.min.js"></script>
         <script src="assets/js/popper.min.js"> </script>
         <script src="assets/js/bootstrap.min.js"> </script>
