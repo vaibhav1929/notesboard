@@ -59,7 +59,7 @@ public class NotesController extends HttpServlet {
                         Notes note = new Notes();
                         note.setTitle(request.getParameter("title"));
                         note.setContent(request.getParameter("content"));
-                        note.setGroupid(1);
+                        note.setGroupid(Integer.parseInt(request.getParameter("groupid")));
                         note.setUid(((User)request.getSession().getAttribute("user")).getUid());
                         note.setColorcode("#FFFFFF");
                         note.setType("NOTE");                       
@@ -77,6 +77,44 @@ public class NotesController extends HttpServlet {
                         }
                         
                         break;
+ //---------------------------------------------------------------------------------------------------------------
+                        
+                    case "delete_note":
+                        boolean deleted = dBManager.deleteNote(Integer.parseInt(request.getParameter("nid")));
+                        if(deleted){
+                            Gson gson = new Gson();
+                            JsonElement jelem = gson.fromJson("{'result':'success'}", JsonElement.class);
+                            out.println(gson.toJson(jelem));    
+                        }
+                        else{
+                            Gson gson = new Gson();
+                            JsonElement jelem = gson.fromJson("{'result':'error'}", JsonElement.class);
+                            out.println(gson.toJson(jelem));    
+                        }
+                        break;
+                        
+                    case "edit_note":
+                        Notes oldNote = new Notes();
+                        oldNote.setNid(Integer.parseInt(request.getParameter("nid")));
+                        oldNote.setTitle(request.getParameter("title"));
+                        oldNote.setContent(request.getParameter("content"));
+                        oldNote.setGroupid(Integer.parseInt(request.getParameter("groupid")));
+                        oldNote.setUid(((User)request.getSession().getAttribute("user")).getUid());
+                        oldNote.setColorcode("#FFFFFF");
+                        oldNote.setType("NOTE"); 
+                         System.out.println(oldNote);
+                        boolean edited = dBManager.updateNote(oldNote);
+                        if(edited){
+                            Gson gson = new Gson();
+                            JsonElement jelem = gson.fromJson("{'result':'success'}", JsonElement.class);
+                            out.println(gson.toJson(jelem));    
+                        }
+                        else{
+                            Gson gson = new Gson();
+                            JsonElement jelem = gson.fromJson("{'result':'error'}", JsonElement.class);
+                            out.println(gson.toJson(jelem));    
+                        }
+                        
                 }
             }
             else{

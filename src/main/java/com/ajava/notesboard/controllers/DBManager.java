@@ -37,7 +37,7 @@ public class DBManager {
                 //---------------------------------NOTES----------------------------------------------------
                 notesInsert = con.prepareStatement("INSERT INTO Notes(groupid,uid,title,type,content,colorcode) VALUES(?,?,?,?,?,?)",new String[]{"nid"});
                 
-                notesUpdate = con.prepareStatement("UPDATE Notes SET groupid = ?, uid = ?, title = ?, type = ?, content = ?, colorcode = ?, isdeleted = ?, whendeleted = ? WHERE nid = ?");
+                notesUpdate = con.prepareStatement("UPDATE Notes SET groupid = ?, uid = ?, title = ?, type = ?, content = ?, colorcode = ?, isdeleted = ? WHERE nid = ?");
                 
                 notesDelete = con.prepareStatement("DELETE FROM Notes WHERE nid = ?");
                 
@@ -119,10 +119,11 @@ public class DBManager {
             notesUpdate.setString(5, note.getContent());
             notesUpdate.setString(6, note.getColorcode());
             notesUpdate.setBoolean(7, note.isIsdeleted());
-            Long miliseconds = Long.valueOf(note.getWhendeleted());
+          /*Long miliseconds = Long.valueOf(note.getWhendeleted());
             Timestamp ti = new Timestamp(miliseconds);
-            notesUpdate.setTimestamp(8, ti);
-            notesUpdate.setInt(9, note.getNid());
+            notesUpdate.setTimestamp(8, ti);*/
+            notesUpdate.setInt(8, note.getNid());
+            System.out.println(note);
             int rows = notesUpdate.executeUpdate();
             return rows > 0;
         } catch (SQLException ex) {
