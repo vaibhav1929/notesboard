@@ -1,6 +1,7 @@
 package com.ajava.notesboard.controllers;
 
 
+import com.ajava.notesboard.models.NoteGroup;
 import com.ajava.notesboard.models.Notes;
 import java.sql.*;
 import java.util.logging.Level;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 public class DBManager {
     Connection con;
     PreparedStatement insertAccount, updateAccount, loginAccount, emailAccount, notesInsert, notesUpdate, notesDelete,getNotesByUidStatment,getNotesByUidAndNidStatment;
+    PreparedStatement getGroupByGidStatement, getGroupByUidStatement;
     
     public DBManager(){
         if(con == null){
@@ -22,7 +24,7 @@ public class DBManager {
                 
                 // All queries will be compiled here by preparedStatement.
                 if(con != null){
-                    System.out.println("-----------------------HERE IS A PROBLEM---------------------------");
+                    System.out.println("-----------------------CON SUCCESS---------------------------");
                 }
                 insertAccount = con.prepareStatement("INSERT INTO Users(name,email,password,pin) VALUES(?,?,?,?)");
                 
@@ -32,16 +34,21 @@ public class DBManager {
                 
                 emailAccount = con.prepareStatement("SELECT * FROM Users WHERE email = ?");
                 
-                notesInsert = con.prepareStatement("INSERT INTO Notes(groupid,uid,title,type,content,colorcode) VALUES(?,?,?,?,?,?)");
+                //---------------------------------NOTES----------------------------------------------------
+                notesInsert = con.prepareStatement("INSERT INTO Notes(groupid,uid,title,type,content,colorcode) VALUES(?,?,?,?,?,?)",new String[]{"nid"});
                 
                 notesUpdate = con.prepareStatement("UPDATE Notes SET groupid = ?, uid = ?, title = ?, type = ?, content = ?, colorcode = ?, isdeleted = ?, whendeleted = ? WHERE nid = ?");
                 
                 notesDelete = con.prepareStatement("DELETE FROM Notes WHERE nid = ?");
                 
-                getNotesByUidStatment = con.prepareStatement("SELECT * FROM Notes WHERE uid = ?");
+                getNotesByUidStatment = con.prepareStatement("SELECT * FROM Notes WHERE uid = ? ORDER BY groupid");
                 
                 getNotesByUidAndNidStatment = con.prepareStatement("SELECT * FROM Notes WHERE uid = ? AND nid = ?");
+               
+                //--------------------------------GROUP-------------------------------------------------------
+                getGroupByGidStatement = con.prepareStatement("SELECT * FROM NoteGroup WHERE groupid = ?");
                 
+                getGroupByUidStatement = con.prepareStatement("SELECT * FROM NoteGroup WHERE uid = ?");
                
             }catch(Exception e){
                 System.err.println(e);
@@ -54,10 +61,19 @@ public class DBManager {
         ArrayList<Notes> ret=new ArrayList<Notes>();
         try {
             getNotesByUidStatment.setInt(1, uid);
-            ResultSet set = emailAccount.executeQuery();
+            System.out.println(getNotesByUidStatment);
+            ResultSet set = getNotesByUidStatment.executeQuery();
             while(set.next()){
-                Notes temp=new Notes(set.getInt("nid"),set.getInt("groupid"),set.getInt("uid"),set.getString("title"),set.getString("type"),set.getString("content"),set.getString("colorcode"),set.getBoolean("isdeleted"),set.getTimestamp("whendeleted").toString());
-                ret.add(temp);
+                
+                if(set.getTimestamp("whendeleted") != null){
+                    Notes temp = new Notes(set.getInt("nid"),set.getInt("groupid"),set.getInt("uid"),set.getString("title"),set.getString("type"),set.getString("content"),set.getString("colorcode"),set.getBoolean("isdeleted"), set.getTimestamp("whendeleted").toString(), getGroupByGid(set.getInt("groupid")));
+                    ret.add(temp);
+                }
+                else{
+                    Notes temp = new Notes(set.getInt("nid"),set.getInt("groupid"),set.getInt("uid"),set.getString("title"),set.getString("type"),set.getString("content"),set.getString("colorcode"),set.getBoolean("isdeleted"), null, getGroupByGid(set.getInt("groupid")));
+                    ret.add(temp);
+                }
+                
                 
             }
         } catch (SQLException ex) {
@@ -70,9 +86,9 @@ public class DBManager {
         try {
             getNotesByUidAndNidStatment.setInt(1, uid);
             getNotesByUidAndNidStatment.setInt(2, nid);
-            ResultSet set = emailAccount.executeQuery();
+            ResultSet set = getNotesByUidAndNidStatment.executeQuery();
             while(set.next()){
-                 temp=new Notes(set.getInt("nid"),set.getInt("groupid"),set.getInt("uid"),set.getString("title"),set.getString("type"),set.getString("content"),set.getString("colorcode"),set.getBoolean("isdeleted"),set.getTimestamp("whendeleted").toString());
+                 temp=new Notes(set.getInt("nid"),set.getInt("groupid"),set.getInt("uid"),set.getString("title"),set.getString("type"),set.getString("content"),set.getString("colorcode"),set.getBoolean("isdeleted"),set.getTimestamp("whendeleted").toString(), getGroupByGid(set.getInt("groupid")));
             }
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -84,8 +100,8 @@ public class DBManager {
     
     public boolean deleteNote(int nid){
         try {
-            notesUpdate.setInt(1, nid);
-            int rows = notesUpdate.executeUpdate();
+            notesDelete.setInt(1, nid);
+            int rows = notesDelete.executeUpdate();
             return rows > 0;
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -116,10 +132,10 @@ public class DBManager {
        return false;
     }
     
+        
     
     
-    
-        public boolean addNewNote(Notes note){
+        public int addNewNote(Notes note){
         try {
             notesInsert.setInt(1, note.getGroupid());
             notesInsert.setInt(2, note.getUid());
@@ -128,15 +144,52 @@ public class DBManager {
             notesInsert.setString(5, note.getContent());
             notesInsert.setString(6, note.getColorcode());
             int rows = notesInsert.executeUpdate();
-            return rows > 0;
+           
+            boolean isAdded = rows > 0;
+            if(isAdded){
+                ResultSet set = notesInsert.getGeneratedKeys();
+                set.next();
+                return set.getInt(1);
+            }
+            else return -1;
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-       return false;
+       return -1;
     }
     
+        public NoteGroup getGroupByGid(int groupid){
+            NoteGroup group = new NoteGroup();
+        try {
+            getGroupByGidStatement.setInt(1, groupid);
+            ResultSet set = getGroupByGidStatement.executeQuery();
+            while(set.next()){
+                 group = new NoteGroup(set.getInt("groupid"),set.getInt("uid"),set.getString("name"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+          return group;  
+        }
 
+        public ArrayList<NoteGroup> getGroupsByUid(int uid){
+        ArrayList<NoteGroup> ret=new ArrayList<NoteGroup>();
+        try {
+            getGroupByUidStatement.setInt(1, uid);
+            System.out.println(getGroupByUidStatement);
+            ResultSet set = getGroupByUidStatement.executeQuery();
+            while(set.next()){
+                    NoteGroup temp = new NoteGroup(set.getInt("groupid"),set.getInt("uid"),set.getString("name"));
+                    ret.add(temp);
+ 
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return ret;
+    }
+        
             public boolean updateUser(User user){
         try {
             updateAccount.setString(1, user.getName());

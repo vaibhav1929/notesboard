@@ -25,10 +25,10 @@ public class Notes {
     String colorcode;
     boolean isdeleted;
     String whendeleted;
-    
+    NoteGroup group;
     public Notes()
     {}
-    public Notes(int nid,int groupid,int uid,String title,String type,String content,String colorcode,boolean isdeleted,String whendeleted)
+    public Notes(int nid,int groupid,int uid,String title,String type,String content,String colorcode,boolean isdeleted,String whendeleted, NoteGroup group)
     {
         this.nid = nid;
         this.groupid = groupid;
@@ -39,6 +39,7 @@ public class Notes {
         this.colorcode = colorcode;
         this.isdeleted = isdeleted;
         this.whendeleted = whendeleted;
+        this.group = group;
 
     }
     
@@ -131,6 +132,19 @@ public class Notes {
 
     public void setWhendeleted(String whendeleted) {
         this.whendeleted = whendeleted;
+    }
+
+    public NoteGroup getGroup() {
+        return group;
+    }
+
+    public void setGroup(NoteGroup group) {
+        this.group = group;
+    }
+
+    @Override
+    public String toString() {
+        return "Notes{" + "nid=" + nid + ", groupid=" + groupid + ", uid=" + uid + ", title=" + title + ", type=" + type + ", content=" + content + ", colorcode=" + colorcode + ", isdeleted=" + isdeleted + ", whendeleted=" + whendeleted + '}';
     }
     
     

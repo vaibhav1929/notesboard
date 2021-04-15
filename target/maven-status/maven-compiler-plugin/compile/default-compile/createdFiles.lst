@@ -5,3 +5,4 @@ com\ajava\notesboard\controllers\AccountHandler.class
 com\ajava\notesboard\models\Group.class
 com\ajava\notesboard\models\User.class
 com\ajava\notesboard\models\Notes.class
+com\ajava\notesboard\controllers\NotesController.class

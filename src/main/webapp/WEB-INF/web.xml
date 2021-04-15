@@ -16,6 +16,10 @@
         <servlet-name>testServlet</servlet-name>
         <servlet-class>com.ajava.notesboard.controllers.testServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>NotesController</servlet-name>
+        <servlet-class>com.ajava.notesboard.controllers.NotesController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AccountHandler</servlet-name>
         <url-pattern>/AccountHandler</url-pattern>
@@ -23,6 +27,10 @@
     <servlet-mapping>
         <servlet-name>testServlet</servlet-name>
         <url-pattern>/testServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>NotesController</servlet-name>
+        <url-pattern>/NotesController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
