@@ -28,13 +28,13 @@
         <div class="header-body">
           <div class="row">
             <div class="col-xl-6 col-md-6">
-              <div class="card card-stats">
+              <div class="card card-stats" id="NoteFormContainer">
                 <!-- Card body -->
                 <div class="card-header">
                     <div class="icon icon-shape ni ni-single-copy-04 bg-gradient-orange text-white rounded-circle shadow">
                         <i class="ni ni-"></i>
                       </div>
-                    <span class="h2 font-weight-bold mb-0">Create new Note</span>
+                    <span class="h2 font-weight-bold mb-0" id="note_form_title">Create new Note</span>
                 </div>
                 <div class="card-body">
                   <div class="row">
@@ -63,7 +63,7 @@
                                
                               </div>
                             </div>
-                              <button class="btn btn-info ml-3" onclick="saveNote()"> Save note</button>
+                              <button class="btn btn-info ml-3" data="save" id="note_save_btn" onclick="saveNote()"> Save note</button>
                           </div>
                           
                           
@@ -78,7 +78,7 @@
                 <!-- Card body -->
                 <div class="card-header">
                     <div class="icon icon-shape ni ni-collection bg-gradient-primary text-white rounded-circle shadow">
-                        <i class="ni ni-"></i>
+                        
                       </div>
                     <span class="h2 font-weight-bold mb-0">Create new Group</span>
                 </div>
@@ -119,9 +119,26 @@
                      <div class="col-12"><h1><span class="badge badge-light">${noteItem.getGroup().getName()}</span></h1></div>
                  <c:set var="prevGroup" value="${noteItem.getGroupid()}"/>    
              </c:if>            
-            <div class="col-md-4 col-sm-4 pb-2 pt-2 pl-2 pr-2 m-0">
+            <div class="col-md-4 col-sm-4 pb-2 pt-2 pl-2 pr-2 m-0" id="${noteItem.getNid()}">
                 <div class="card m-0">
-                    <div class="card-header p-2"><h1> <span class="badge badge-info"><c:out value="${noteItem.getTitle()}"/></span></h1></div>
+                    <div class="card-header p-2">
+                        <h1 style="display:inline-block"> <span class="badge badge-info"><c:out value="${noteItem.getTitle()}"/></span></h1>
+                        
+                        <div class="dropdown float-right">
+                            <a class="btn btn-icon-only text-primary" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <i class="ni ni-bullet-list-67"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow" style="">
+                               <button class="dropdown-item text-info" onclick="editNote(${noteItem.getNid()},'${noteItem.getTitle()}','${noteItem.getContent()}',${noteItem.getGroupid()})">
+                                <i class="ni ni-scissors"></i>Edit
+                               </button>
+                              <button class="dropdown-item text-danger" onclick="deleteNote(${noteItem.getNid()})">
+                                <i class="ni ni-fat-remove "></i>Remove
+                              </button>
+                            </div>
+                      </div>
+                        
+                    </div>
                     <div class="card-body"><c:out value="${noteItem.getContent()}"/></div>   
                 </div>
             </div>

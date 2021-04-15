@@ -5,10 +5,13 @@
  */
 
 function saveNote(){
-    
+    let mode = (document.getElementById("note_save_btn").getAttribute("data"));
     data = {action:"save_note", title:document.getElementById("note_title").value, 
-    content:document.getElementById("note_content").value};
-console.log(data);
+    content:document.getElementById("note_content").value, groupid:document.getElementById("note_groupid").value};
+        if(mode == "edit"){
+            data.action = "edit_note";
+            data.nid = document.getElementById("note_save_btn").getAttribute("editid");
+        }
         $.ajax({
         url:"NotesController" ,
         data:data,
@@ -17,14 +20,51 @@ console.log(data);
             if(res.error){
                 swal({text:'Error occured!', icon:'error'});
             }
-            else
-            addNoteInUI(res); 
+            else{
+                if(mode == "edit") window.location.href = "dashboard.jsp";
+                else addNoteInUI(res);
+            }
+             
         },
         error:function(){swal({text:'Error occured!', icon:'error'});}
     
     });
 }
 
+function deleteNote(nid){
+    data = {action:"delete_note", nid:nid};
+    console.log(data);
+        $.ajax({
+        url:"NotesController" ,
+        data:data,
+        method:"post",
+        success:function(res){
+            if(res.result == "error"){
+                swal({text:'Error occured!', icon:'error'});
+            }
+            else{
+                swal({text:'Note Removed', icon:'success'});
+                document.getElementById(nid).remove();
+            } 
+        },
+        error:function(){swal({text:'Error occured!', icon:'error'});}
+    
+    });
+}
+
+function editNote(nid, title, content, groupid){
+    document.getElementById("note_form_title").innerHTML = "Edit "+title+" Note";
+    let groups = document.getElementById("note_groupid");
+    const options = Array.from(groups.options);
+    options.forEach((option, i) => {
+        if (option.value == groupid) groups.selectedIndex = i;
+    });
+    document.getElementById("note_title").value = title;
+    document.getElementById("note_content").value = content;
+    document.getElementById("NoteFormContainer").scrollIntoView();
+    document.getElementById("note_save_btn").setAttribute("data","edit");
+    document.getElementById("note_save_btn").setAttribute("editid",nid);
+}
 function addNoteInUI(note){
     let parent = document.getElementById(note.groupid);
     if(parent == null){
