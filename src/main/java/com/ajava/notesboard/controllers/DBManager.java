@@ -1,6 +1,7 @@
 package com.ajava.notesboard.controllers;
 
 
+import com.ajava.notesboard.models.CheckList;
 import com.ajava.notesboard.models.NoteGroup;
 import com.ajava.notesboard.models.Notes;
 import java.sql.*;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
  */
 public class DBManager {
     Connection con;
-    PreparedStatement insertAccount, updateAccount, loginAccount, emailAccount, notesInsert, notesUpdate, notesDelete,getNotesByUidStatment,getNotesByUidAndNidStatment;
+    PreparedStatement insertAccount, updateAccount, loginAccount, emailAccount, notesInsert, notesUpdate, notesDelete,getNotesByUidStatment,getNotesByUidAndNidStatment,chkListInsert,chkListDelete,chkListUpdate;
     PreparedStatement getGroupByGidStatement, getGroupByUidStatement;
     
     public DBManager(){
@@ -46,9 +47,20 @@ public class DBManager {
                 getNotesByUidAndNidStatment = con.prepareStatement("SELECT * FROM Notes WHERE uid = ? AND nid = ?");
                
                 //--------------------------------GROUP-------------------------------------------------------
+                
                 getGroupByGidStatement = con.prepareStatement("SELECT * FROM NoteGroup WHERE groupid = ?");
                 
                 getGroupByUidStatement = con.prepareStatement("SELECT * FROM NoteGroup WHERE uid = ?");
+                
+                //---------------------------------CheckList----------------------------------------------------
+                
+                chkListInsert = con.prepareStatement("INSERT INTO CheckList(title,uid,items,states,colorcode) VALUES(?,?,?,?,?)");
+                
+                chkListUpdate = con.prepareStatement("UPDATE CheckList SET title = ?, uid = ?, items = ?, states = ?,colorcode=?, isdeleted = ?, whendeleted = ? WHERE chklistid = ?");
+                
+                chkListDelete = con.prepareStatement("DELETE FROM CheckList WHERE chklistid  = ?");
+                
+
                
             }catch(Exception e){
                 System.err.println(e);
@@ -56,6 +68,75 @@ public class DBManager {
             
         }
     }
+    
+    
+        
+            public boolean updateChkList(CheckList chklist){
+        try {
+            chkListUpdate.setString(1, chklist.getTitle());
+            chkListUpdate.setInt(2, chklist.getUid());
+            chkListUpdate.setString(3, chklist.getItems());
+            chkListUpdate.setString(4, chklist.getStates());
+            chkListUpdate.setString(5, chklist.getColorcode());
+            chkListUpdate.setBoolean(6, chklist.isIsdeleted());
+            Long miliseconds = Long.valueOf(chklist.getWhendeleted());
+            Timestamp ti = new Timestamp(miliseconds);
+            chkListUpdate.setTimestamp(7, ti);
+            chkListUpdate.setInt(8, chklist.getChklistid());
+            int rows = chkListUpdate.executeUpdate();
+            return rows > 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+       return false;
+    }
+    
+       public int addNewChkList(CheckList chklist){
+        try {
+            
+            chkListInsert.setString(1, chklist.getTitle());
+            chkListInsert.setInt(2, chklist.getUid());
+            chkListInsert.setString(3, chklist.getItems());
+            chkListInsert.setString(4, chklist.getStates());
+            chkListInsert.setString(5, chklist.getColorcode());
+            int rows = chkListInsert.executeUpdate();
+           
+            boolean isAdded = rows > 0;
+            if(isAdded){
+                ResultSet set = chkListInsert.getGeneratedKeys();
+                set.next();
+                return set.getInt(1);
+            }
+            else return -1;
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+       return -1;
+    }
+        
+    
+
+    
+        
+    
+    
+     
+    
+        public boolean deleteChkList(int chklistid){
+        try {
+            chkListDelete.setInt(1, chklistid);
+            int rows = chkListDelete.executeUpdate();
+            return rows > 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+       return false;
+    }
+    
+
     
     public ArrayList<Notes> getNotesByUid(int uid){
         ArrayList<Notes> ret=new ArrayList<Notes>();
