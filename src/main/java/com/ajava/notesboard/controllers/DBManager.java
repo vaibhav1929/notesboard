@@ -14,7 +14,7 @@ import java.util.ArrayList;
  */
 public class DBManager {
     Connection con;
-    PreparedStatement insertAccount, updateAccount, loginAccount, emailAccount, notesInsert, notesUpdate, notesDelete,getNotesByUidStatment,getNotesByUidAndNidStatment,chkListInsert,chkListDelete,chkListUpdate;
+    PreparedStatement insertAccount, updateAccount, loginAccount, emailAccount, notesInsert, notesUpdate, notesDelete,getNotesByUidStatment,getNotesByUidAndNidStatment,chkListInsert,chkListDelete,chkListUpdate,getChkListByUidStatment,getChkListByUidAndChklistidStatment;
     PreparedStatement getGroupByGidStatement, getGroupByUidStatement, groupInsert;
     
     public DBManager(){
@@ -66,6 +66,10 @@ public class DBManager {
                 
                 chkListDelete = con.prepareStatement("DELETE FROM CheckList WHERE chklistid  = ?");
                 
+                getChkListByUidStatment = con.prepareStatement("SELECT * FROM CheckList WHERE uid = ?");
+                
+                getChkListByUidAndChklistidStatment = con.prepareStatement("SELECT * FROM CheckList WHERE uid = ? AND chklistid = ?");
+                
 
                
             }catch(Exception e){
@@ -74,6 +78,46 @@ public class DBManager {
             
         }
     }
+    public ArrayList<CheckList> getChkListByUid(int uid){
+        ArrayList<CheckList> ret=new ArrayList<CheckList>();
+        try {
+            getChkListByUidStatment.setInt(1, uid);
+            System.out.println(getChkListByUidStatment);
+            ResultSet set = getChkListByUidStatment.executeQuery();
+            while(set.next()){
+                
+                if(set.getTimestamp("whendeleted") != null){
+                    CheckList temp = new CheckList(set.getInt("chklistid"),set.getString("title"),set.getInt("uid"),set.getString("items"),set.getString("states"),set.getString("colorcode"),set.getBoolean("isdeleted"), set.getTimestamp("whendeleted").toString());
+                    ret.add(temp);
+                }
+                else{
+                    CheckList temp = new CheckList(set.getInt("chklistid"),set.getString("title"),set.getInt("uid"),set.getString("items"),set.getString("states"),set.getString("colorcode"),set.getBoolean("isdeleted"), null);
+                    ret.add(temp);
+                }
+                
+                
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return ret;
+    }
+    
+    public CheckList getChkListByUidAndNid(int uid,int chklistid){
+        CheckList temp=new CheckList();
+        try {
+            getChkListByUidAndChklistidStatment.setInt(1, uid);
+            getChkListByUidAndChklistidStatment.setInt(2, nid);
+            ResultSet set = getChkListByUidAndChklistidStatment.executeQuery();
+            while(set.next()){
+                 temp=new CheckList(set.getInt("chklistid"),set.getString("title"),set.getInt("uid"),set.getString("items"),set.getString("states"),set.getString("colorcode"),set.getBoolean("isdeleted"), set.getTimestamp("whendeleted").toString());
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return temp;
+    }
+    
     
     
         
