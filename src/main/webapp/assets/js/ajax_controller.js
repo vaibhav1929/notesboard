@@ -18,7 +18,7 @@ function saveNote(){
         method:"post",
         success:function(res){
             if(res.error){
-                swal({text:'Error occured!', icon:'error'});
+                Swal.fire({text:'Error occured!', icon:'error'});
             }
             else{
                 if(mode == "edit") window.location.href = "dashboard.jsp";
@@ -31,7 +31,7 @@ function saveNote(){
             }
              
         },
-        error:function(){swal({text:'Error occured!', icon:'error'});}
+        error:function(){Swal.fire({text:'Error occured!', icon:'error'});}
     
     });
 }
@@ -45,14 +45,14 @@ function deleteNote(nid){
         method:"post",
         success:function(res){
             if(res.result == "error"){
-                swal({text:'Error occured!', icon:'error'});
+                Swal.fire({text:'Error occured!', icon:'error'});
             }
             else{
-                swal({text:'Note Removed', icon:'success'});
+                Swal.fire({text:'Note Removed', icon:'success'});
                 document.getElementById("note_"+nid).remove();
             } 
         },
-        error:function(){swal({text:'Error occured!', icon:'error'});}
+        error:function(){Swal.fire({text:'Error occured!', icon:'error'});}
     
     });
 }
@@ -104,6 +104,7 @@ function addNoteInUI(note){
     column.id = "note_"+note.nid;
     column.innerHTML = content;
     parent.appendChild(column);
+    parent.scrollIntoView();
 }
 
 //---------------------------------GROUP----------------------------------------
@@ -120,15 +121,15 @@ function saveGroup(){
         method:"post",
         success:function(res){
             if(res.error){
-                swal({text:'Error occured!', icon:'error'});
+                Swal.fire({text:'Error occured!', icon:'error'});
             }
             else{
                 if(mode == "edit") window.location.href = "dashboard.jsp";
-                else swal({text:document.getElementById("group_title").value+' Group created', icon:'success'});
+                else Swal.fire({text:document.getElementById("group_title").value+' Group created', icon:'success'});
             }
              
         },
-        error:function(){swal({text:'Error occured!', icon:'error'});}
+        error:function(){Swal.fire({text:'Error occured!', icon:'error'});}
     
     });
 }
@@ -142,14 +143,14 @@ function deleteGroup(groupid){
         method:"post",
         success:function(res){
             if(res.result == "error"){
-                swal({text:'Error occured!', icon:'error'});
+                Swal.fire({text:'Error occured!', icon:'error'});
             }
             else{
-                swal({text:'Group Removed', icon:'success'});
+                Swal.fire({text:'Group Removed', icon:'success'});
                 document.getElementById(groupid).remove();
             } 
         },
-        error:function(){swal({text:'Error occured!', icon:'error'});}
+        error:function(){Swal.fire({text:'Error occured!', icon:'error'});}
     
     });
 }
@@ -161,4 +162,116 @@ function editGroup(groupid, title){
     document.getElementById("groupFormContainer").scrollIntoView();
     document.getElementById("group_save_btn").setAttribute("data","edit");
     document.getElementById("group_save_btn").setAttribute("editid",groupid);
+}
+
+function saveVaultPassword(password){
+    data = {action:"save_password",password:password};
+    console.log(data);
+        $.ajax({
+        url:"VaultController" ,
+        data:data,
+        method:"post",
+        success:function(res){
+            if(res.result == "error"){
+                Swal.fire({text:'Error occured!', icon:'error'});
+            }
+            else{
+                Swal.fire({text:'Password saved', icon:'success'});
+                window.location.href = "dashboard.jsp";
+            } 
+        },
+        error:function(){Swal.fire({text:'Error occured!', icon:'error'});}
+    
+    });
+    
+}
+function visibleNote(nid){
+    data = {action:"visible_note",nid:nid};
+    console.log(data);
+        $.ajax({
+        url:"VaultController" ,
+        data:data,
+        method:"post",
+        success:function(res){
+            if(res.result == "error"){
+                Swal.fire({text:'Error occured!', icon:'error'});
+            }
+            else{
+                let currentNode = document.getElementById("note_"+nid).cloneNode(true);
+                
+                document.getElementById("note_"+nid).remove();
+                document.getElementById("NormalNoteContainer").appendChild(currentNode);
+                document.getElementById("btn_note_"+nid).setAttribute("onclick", "hNote("+nid+")");
+                document.getElementById("btn_note_"+nid).innerHTML = "hide";
+            } 
+        },
+        error:function(){Swal.fire({text:'Error occured!', icon:'error'});}
+    
+    });
+    
+}
+function hNote(nid){
+    data = {action:"h_note",nid:nid};
+    console.log(data);
+        $.ajax({
+        url:"VaultController" ,
+        data:data,
+        method:"post",
+        success:function(res){
+            if(res.result == "error"){
+                Swal.fire({text:'Error occured!', icon:'error'});
+            }
+            else{
+                let currentNode = document.getElementById("note_"+nid).cloneNode(true);
+                
+                document.getElementById("note_"+nid).remove();
+                document.getElementById("HidNoteContainer").appendChild(currentNode);
+                document.getElementById("btn_note_"+nid).setAttribute("onclick", "visibleNote("+nid+")");
+                document.getElementById("btn_note_"+nid).innerHTML = "show";
+            } 
+        },
+        error:function(){Swal.fire({text:'Error occured!', icon:'error'});}
+    
+    });
+    
+}
+
+function addHNoteInUI(note,addToHide){
+    let parent = document.getElementById((addToHide)?"HidNoteContainer":"NormalNoteContainer");
+    let options = "<button class='btn btn-sm btn-info float-right' id='btn_note_"+note.nid+"' onclick='"+((note.hidden)?"visibleNote("+note.nid+")":"hNote("+note.nid+")")+"'>"+((note.hidden)?"show":"hide")+"</button>";
+    let content = " <div class='card m-0'><div class='card-header p-2'><h1 style='display: inline-block'><span class='badge badge-info'>"+note.title+"</span></h1>"+options+"</div><div class='card-body'>"+note.content+"</div></div>";
+    
+    let column = document.createElement("div");
+    column.classList.add("col-md-4", "col-sm-4", "pb-2", "pt-2", "pl-2", "pr-2", "m-0");
+    column.id = "note_"+note.nid;
+    column.innerHTML = content;
+    parent.appendChild(column);
+    
+}
+function showHNotes(){
+    data = {action:"show_hnotes"};
+    
+        $.ajax({
+        url:"VaultController" ,
+        data:data,
+        method:"post",
+        success:function(res){
+            if(res.result == "error"){
+                Swal.fire({text:'Error occured!', icon:'error'});
+            }
+            else{
+                console.log(res);
+                let normalNotes = [];
+                let hidNotes = [];
+                for(let i = 0; i < res.notes.length; i++){
+                    if(res.notes[i].hidden) hidNotes.push(res.notes[i]);
+                    else normalNotes.push(res.notes[i]);
+                }
+                for(let i = 0; i < hidNotes.length; i++) addHNoteInUI(hidNotes[i],true);
+                for(let i = 0; i < normalNotes.length; i++) addHNoteInUI(normalNotes[i],false);
+            } 
+        },
+        error:function(){Swal.fire({text:'Error occured!', icon:'error'});}
+    
+    });
 }

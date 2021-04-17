@@ -15,7 +15,7 @@
         <link rel="stylesheet" href="assets/css/style.css"/>
         
         
-        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script src="assets/js/sweet_alert.js"></script>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
         <link rel="stylesheet" href="assets/css/nucleo.css" type="text/css">
         <link rel="stylesheet" href="assets/css/fontaw-all.min.css" type="text/css">
@@ -30,26 +30,26 @@
         <div class="collapse navbar-collapse" id="sidenav-collapse-main">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link active" href="#notes">
+              <a class="nav-link active" href="#notes" id="notes_item">
                 <i class="ni ni-single-copy-04 text-orange"></i>
                 <span class="nav-link-text">Notes</span>
               </a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#checklist">
+            <li class="nav-item" >
+              <a class="nav-link" href="#checklist" id="checklist_item">
                 <i class="ni ni-check-bold text-primary"></i>
                 <span class="nav-link-text">Checklist</span>
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#vault">
+                <a class="nav-link" href="vault_view.jsp" target="_blank" id="vault_item">
                 <i class="ni ni-settings-gear-65 text-danger"></i>
                 <span class="nav-link-text">Vault</span>
               </a>
             </li>
             
             <li class="nav-item">
-              <a class="nav-link" href="#bin">
+              <a class="nav-link" href="#bin" id="bin_item">
                 <i class="ni ni-basket text-yellow"></i>
                 <span class="nav-link-text">Recycle bin</span>
               </a>
@@ -113,11 +113,14 @@
     </nav>
   
                   <div class="header">
-                      <div class="continer">
+                      <div id="note_container">
                       <jsp:include page="notes_view.jsp"/>
                       </div>
+                      
+                     
+                      
                   </div>
-                  
+  </div>              
         <script src="assets/js/jquery.min.js"></script>
         <script src="assets/js/popper.min.js"> </script>
         <script src="assets/js/bootstrap.min.js"> </script>
@@ -125,5 +128,9 @@
         <script src="assets/js/jquery-scrollLock.min.js"></script>
         <script src="assets/js/js.cookie.js"></script>
         <script src="assets/js/argon.js?v=1.2.0"></script>
+        
+        <script type="text/javascript">
+            
+        </script>
     </body>
 </html>

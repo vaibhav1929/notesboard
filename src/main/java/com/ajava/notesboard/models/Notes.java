@@ -26,6 +26,8 @@ public class Notes {
     boolean isdeleted;
     String whendeleted;
     NoteGroup group;
+    boolean hidden;
+    
     public Notes()
     {}
     public Notes(int nid,int groupid,int uid,String title,String type,String content,String colorcode,boolean isdeleted,String whendeleted, NoteGroup group)
@@ -142,9 +144,18 @@ public class Notes {
         this.group = group;
     }
 
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
+    }
+
+    
     @Override
     public String toString() {
-        return "Notes{" + "nid=" + nid + ", groupid=" + groupid + ", uid=" + uid + ", title=" + title + ", type=" + type + ", content=" + content + ", colorcode=" + colorcode + ", isdeleted=" + isdeleted + ", whendeleted=" + whendeleted + '}';
+        return "Notes{" + "nid=" + nid + ", groupid=" + groupid + ", uid=" + uid + ", title=" + title + ", type=" + type + ", content=" + content + ", colorcode=" + colorcode + ", isdeleted=" + isdeleted + ", whendeleted=" + whendeleted + ", hide=" + hidden + '}';
     }
     
     
