@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class DBManager {
     Connection con;
     PreparedStatement insertAccount, updateAccount, loginAccount, emailAccount, notesInsert, notesUpdate, notesDelete,getNotesByUidStatment,getNotesByUidAndNidStatment,chkListInsert,chkListDelete,chkListUpdate;
-    PreparedStatement getGroupByGidStatement, getGroupByUidStatement;
+    PreparedStatement getGroupByGidStatement, getGroupByUidStatement, groupInsert;
     
     public DBManager(){
         if(con == null){
@@ -51,6 +51,12 @@ public class DBManager {
                 getGroupByGidStatement = con.prepareStatement("SELECT * FROM NoteGroup WHERE groupid = ?");
                 
                 getGroupByUidStatement = con.prepareStatement("SELECT * FROM NoteGroup WHERE uid = ?");
+                
+                groupInsert = con.prepareStatement("INSERT INTO NoteGroup(name,uid) VALUES(?,?)",new String[]{"groupid"});
+                
+                //groupUpdate = con.prepareStatement("UPDATE NoteGroup SET name = ? WHERE groupid = ?");
+                
+               // groupDelete = con.prepareStatement("DELETE FROM NoteGroup WHERE groupid = ?");
                 
                 //---------------------------------CheckList----------------------------------------------------
                 
@@ -218,28 +224,28 @@ public class DBManager {
     
     
         public int addNewNote(Notes note){
-        try {
-            notesInsert.setInt(1, note.getGroupid());
-            notesInsert.setInt(2, note.getUid());
-            notesInsert.setString(3, note.getTitle());
-            notesInsert.setString(4, note.getType());
-            notesInsert.setString(5, note.getContent());
-            notesInsert.setString(6, note.getColorcode());
-            int rows = notesInsert.executeUpdate();
-           
-            boolean isAdded = rows > 0;
-            if(isAdded){
-                ResultSet set = notesInsert.getGeneratedKeys();
-                set.next();
-                return set.getInt(1);
+            try {
+                notesInsert.setInt(1, note.getGroupid());
+                notesInsert.setInt(2, note.getUid());
+                notesInsert.setString(3, note.getTitle());
+                notesInsert.setString(4, note.getType());
+                notesInsert.setString(5, note.getContent());
+                notesInsert.setString(6, note.getColorcode());
+                int rows = notesInsert.executeUpdate();
+
+                boolean isAdded = rows > 0;
+                if(isAdded){
+                    ResultSet set = notesInsert.getGeneratedKeys();
+                    set.next();
+                    return set.getInt(1);
+                }
+                else return -1;
+            } catch (SQLException ex) {
+                Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
             }
-            else return -1;
-        } catch (SQLException ex) {
-            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
         
-       return -1;
-    }
+            return -1;
+       }
     
         public NoteGroup getGroupByGid(int groupid){
             NoteGroup group = new NoteGroup();
@@ -270,8 +276,46 @@ public class DBManager {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         return ret;
-    }
+        }
         
+        public int addNewGroup(NoteGroup group){
+            try {
+                groupInsert.setString(1, group.getName());
+                groupInsert.setInt(2, group.getUid());
+                System.out.println(groupInsert);
+                int rows = groupInsert.executeUpdate();
+
+                boolean isAdded = rows > 0;
+                if(isAdded){
+                    ResultSet set = groupInsert.getGeneratedKeys();
+                    set.next();
+                    return set.getInt(1);
+                }
+                else return -1;
+            } catch (SQLException ex) {
+                Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+           return -1;
+        }
+        
+        /*public boolean updateGroup(NoteGroup group){
+            try {
+                groupUpdate.setString(1, group.getName());
+                groupUpdate.setInt(2, group.getGroupid());
+                int rows = groupInsert.executeUpdate();
+
+                boolean isEdit = rows > 0;
+                
+                return isEdit;
+            } catch (SQLException ex) {
+                Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+           return false;
+        }
+
+        */
             public boolean updateUser(User user){
         try {
             updateAccount.setString(1, user.getName());

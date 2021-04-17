@@ -65,6 +65,11 @@ public class NoteGroup {
     public void setUid(int uid) {
         this.uid = uid;
     }
+
+    @Override
+    public String toString() {
+        return "NoteGroup{" + "groupid=" + groupid + ", uid=" + uid + ", name=" + name + '}';
+    }
     
     
 }

@@ -74,7 +74,7 @@
             </div>
               
            <div class="col-xl-6 col-md-6 mt-6">
-              <div class="card card-stats">
+              <div class="card card-stats" id="groupFormContainer">
                 <!-- Card body -->
                 <div class="card-header">
                     <div class="icon icon-shape ni ni-collection bg-gradient-primary text-white rounded-circle shadow">
@@ -85,7 +85,6 @@
                 <div class="card-body">
                   <div class="row">
                     <div class="col">
-                      <form class="col-md-12" method="post" action="saveGroup">
                           <div class="row">
                             <div class="col-lg-12">
                               <div class="form-group">
@@ -93,9 +92,9 @@
                                 <input type="text" id="group_title" name="group_title" class="form-control" placeholder="give head to your group">
                               </div>
                             </div>
-                              <button class="btn btn-info ml-3">Save group</button>
+                              <button id="group_save_btn" data="save" class="btn btn-info ml-3"onclick="saveGroup()">Save group</button>
                           </div>
-                      </form>
+                      
                     </div>
                   </div>
                 </div>
@@ -115,11 +114,11 @@
              <c:if test="${noteItem.getGroupid() != prevGroup}">
                 
                  <c:if test="${prevGroup != -1}"></div></c:if>
-                 <div class="row mt-4 mb-4 p-2 bg-default shadow rounded" id="${noteItem.getGroupid()}"> 
+                 <div class="row mt-4 mb-4 p-2 bg-default shadow rounded" id="group_${noteItem.getGroupid()}"> 
                      <div class="col-12"><h1><span class="badge badge-light">${noteItem.getGroup().getName()}</span></h1></div>
                  <c:set var="prevGroup" value="${noteItem.getGroupid()}"/>    
              </c:if>            
-            <div class="col-md-4 col-sm-4 pb-2 pt-2 pl-2 pr-2 m-0" id="${noteItem.getNid()}">
+            <div class="col-md-4 col-sm-4 pb-2 pt-2 pl-2 pr-2 m-0" id="note_${noteItem.getNid()}">
                 <div class="card m-0">
                     <div class="card-header p-2">
                         <h1 style="display:inline-block"> <span class="badge badge-info"><c:out value="${noteItem.getTitle()}"/></span></h1>

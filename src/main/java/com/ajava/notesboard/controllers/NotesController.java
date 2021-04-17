@@ -5,6 +5,7 @@
  */
 package com.ajava.notesboard.controllers;
 
+import com.ajava.notesboard.models.NoteGroup;
 import com.ajava.notesboard.models.Notes;
 import com.ajava.notesboard.models.User;
 import com.google.gson.Gson;
@@ -92,6 +93,7 @@ public class NotesController extends HttpServlet {
                             out.println(gson.toJson(jelem));    
                         }
                         break;
+//---------------------------------------------------------------------------------------------------------------
                         
                     case "edit_note":
                         Notes oldNote = new Notes();
@@ -114,7 +116,30 @@ public class NotesController extends HttpServlet {
                             JsonElement jelem = gson.fromJson("{'result':'error'}", JsonElement.class);
                             out.println(gson.toJson(jelem));    
                         }
+                        break;
                         
+//---------------------------------------------------------------------------------------------------------------
+                    case "save_group":
+                        NoteGroup group = new NoteGroup();
+                        group.setName(request.getParameter("title"));
+                        group.setUid(((User)request.getSession().getAttribute("user")).getUid());
+                        System.out.println(group);
+                        int gid = dBManager.addNewGroup(group);
+                        if(gid != -1){
+                            Gson gson = new Gson();
+                            group.setGroupid(gid);
+                            System.out.println(gson.toJson(group));
+                            out.println(gson.toJson(group));
+                        }
+                        else{
+                            Gson gson = new Gson();
+                            JsonElement jelem = gson.fromJson("{'error':'Error occured in creating group!'}", JsonElement.class);
+                            out.println(gson.toJson(jelem));    
+                        }
+                        
+                        break;
+//---------------------------------------------------------------------------------------------------------------
+ 
                 }
             }
             else{
