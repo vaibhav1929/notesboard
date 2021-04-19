@@ -15,7 +15,7 @@
         <link rel="stylesheet" href="assets/css/style.css"/>
         
         
-        <script src="assets/js/sweet_alert.js"></script>
+        <script src="assets/js/sweet_alert.js"></script> <script src="assets/js/jquery.min.js"></script>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
         <link rel="stylesheet" href="assets/css/nucleo.css" type="text/css">
         <link rel="stylesheet" href="assets/css/fontaw-all.min.css" type="text/css">
@@ -116,12 +116,14 @@
                       <div id="note_container">
                       <jsp:include page="notes_view.jsp"/>
                       </div>
-                      
+                      <div id="checklist_container">
+                          <jsp:include page="checklist_view.jsp"/>
+                      </div>
                      
                       
                   </div>
   </div>              
-        <script src="assets/js/jquery.min.js"></script>
+       
         <script src="assets/js/popper.min.js"> </script>
         <script src="assets/js/bootstrap.min.js"> </script>
         <script src="assets/js/jquery.scrollbar.min.js"></script>
@@ -130,7 +132,24 @@
         <script src="assets/js/argon.js?v=1.2.0"></script>
         
         <script type="text/javascript">
+            $(document).ready(()=>{
+                $("#checklist_container").hide();
+            });
             
+            $("#checklist_item").click(()=>{
+                $("#checklist_container").show();
+                $("#note_container").hide();
+                $("#notes_item").removeClass("active");
+                $("#checklist_item").addClass("active");
+            });
+            $("#notes_item").click(()=>{
+                $("#checklist_container").hide();
+                $("#note_container").show();
+                $("#notes_item").addClass("active");
+                $("#checklist_item").removeClass("active");
+            });
         </script>
+        
+        
     </body>
 </html>

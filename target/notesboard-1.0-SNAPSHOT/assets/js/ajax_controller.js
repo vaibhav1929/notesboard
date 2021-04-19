@@ -275,3 +275,88 @@ function showHNotes(){
     
     });
 }
+
+
+function getTaskView(chkid,title){
+    let view = "<div class='form-control' id='checklist_"+chkid+"'>"+
+                        "<input type='checkbox' class='form-check-input checklist_group' id='checklist_mark_"+chkid+"'>"+
+                        "<b id='checklist_title_"+chkid+"'>"+title+"</b>"+
+                        "<button class='btn btn-sm float-right btn-outline-danger' onclick='removeTask("+chkid+")'>Remove</button>"+
+                "</div>";
+    return view;                
+}
+function addToList(){
+    let title = document.getElementById("task_title").value;
+    let data = {action:"save_task",title:title};
+    
+        $.ajax({
+        url:"checklistController" ,
+        data:data,
+        method:"post",
+        success:function(res){
+            if(res.result == "error"){
+                Swal.fire({text:'Error occured!', icon:'error'});
+            }
+            else{
+                console.log(res);
+                let parent = document.getElementById("checklistHolder");
+                if(document.getElementById("blank_message") != null)document.getElementById("blank_message").style.display = "none";
+                
+                let taskView = getTaskView(res.chklistid,title);
+                
+                parent.innerHTML += (taskView);
+                $('.checklist_group').change(function() {
+                    changeStateOfTask($(this).attr("id").substring(15),$(this).is(':checked'));
+                });
+            } 
+        },
+        error:function(){Swal.fire({text:'Error occured!', icon:'error'});}
+    
+    });
+}
+
+function changeStateOfTask(taskid,state){
+    let data = {action:"state_task",chklistid:taskid, state:state};
+    
+        $.ajax({
+        url:"checklistController" ,
+        data:data,
+        method:"post",
+        success:function(res){
+            if(res.result == "error"){
+                Swal.fire({text:'Error occured!', icon:'error'});
+            }
+            else{
+                
+                let parent = document.getElementById("checklist_title_"+taskid);
+                if(state) parent.classList.add("text-checked");
+                else parent.classList.remove("text-checked");
+                
+            } 
+        },
+        error:function(){Swal.fire({text:'Error occured!', icon:'error'});}
+    
+    });
+}
+
+function removeTask(chkid){
+    let data = {action:"remove_task",chklistid:chkid};
+    
+        $.ajax({
+        url:"checklistController" ,
+        data:data,
+        method:"post",
+        success:function(res){
+            if(res.result == "error"){
+                Swal.fire({text:'Error occured!', icon:'error'});
+            }
+            else{
+                
+                let parent = document.getElementById("checklist_"+chkid);
+                parent.remove();                
+            } 
+        },
+        error:function(){Swal.fire({text:'Error occured!', icon:'error'});}
+    
+    });
+}

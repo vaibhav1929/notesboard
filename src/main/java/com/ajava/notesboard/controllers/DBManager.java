@@ -62,7 +62,7 @@ public class DBManager {
                 
                 //---------------------------------CheckList----------------------------------------------------
                 
-                chkListInsert = con.prepareStatement("INSERT INTO CheckList(title,uid,state) VALUES(?,?,?)");
+                chkListInsert = con.prepareStatement("INSERT INTO CheckList(title,uid,state) VALUES(?,?,?)", new String[]{"chklistid"});
                 
                 chkListUpdate = con.prepareStatement("UPDATE CheckList SET title = ?, uid = ?, state = ? WHERE chklistid = ?");
                 
@@ -136,7 +136,9 @@ public class DBManager {
             
             chkListInsert.setString(1, chklist.getTitle());
             chkListInsert.setInt(2, chklist.getUid());
+            
             chkListInsert.setBoolean(3, chklist.getState());
+            System.out.println(chkListInsert);
             int rows = chkListInsert.executeUpdate();
            
             boolean isAdded = rows > 0;

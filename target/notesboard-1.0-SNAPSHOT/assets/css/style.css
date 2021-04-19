@@ -52,3 +52,6 @@ and open the template in the editor.
   
   
 }
+.text-checked{
+    text-decoration: line-through;
+}

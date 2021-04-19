@@ -79,9 +79,7 @@ public class CheckList {
 
     
 
-    public boolean getState() {
-        return state;
-    }
+    public boolean getState(){return this.state;}
 
     public void setState(boolean state) {
         this.state = state;
