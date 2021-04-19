@@ -21,26 +21,19 @@ public class CheckList {
     int chklistid;
     String title;
     int uid;
-    String items;
-    String states;
-    String colorcode;
-    boolean isdeleted;
-    String whendeleted;
+    boolean state;
     
     
     public CheckList()
     {}
-    public CheckList(int chklistid,String title,int uid,String items,String states,String colorcode,boolean isdeleted,String whendeleted)
+    public CheckList(int chklistid,String title,int uid,boolean state)
     {
         this.chklistid = chklistid;
         this.title = title;
         this.uid = uid;
-        this.items = items;
-        this.states = states;
-        this.colorcode = colorcode;
-        this.isdeleted = isdeleted;
-        this.whendeleted = whendeleted;
-      
+        
+        this.state = state;
+        
 
     }
     
@@ -50,11 +43,7 @@ public class CheckList {
             this.chklistid = set.getInt("chklistid");
             this.title = set.getString("title");
             this.uid = set.getInt("uid");
-            this.items = set.getString("items");
-            this.states = set.getString("states");
-            this.colorcode = set.getString("colorcode");
-            this.isdeleted = set.getBoolean("isdeleted");
-            this.whendeleted = set.getTimestamp("whendeleted")+"";
+            this.state = set.getBoolean("state");
             
           
             
@@ -88,47 +77,15 @@ public class CheckList {
         this.uid = uid;
     }
 
-    public String getItems() {
-        return items;
-    }
-
-    public void setItems(String items) {
-        this.items = items;
-    }
-
-    public String getStates() {
-        return states;
-    }
-
-    public void setStates(String states) {
-        this.states = states;
-    }
-
-    public String getColorcode() {
-        return colorcode;
-    }
-
-    public void setColorcode(String colorcode) {
-        this.colorcode = colorcode;
-    }
-
-    public boolean isIsdeleted() {
-        return isdeleted;
-    }
-
-    public void setIsdeleted(boolean isdeleted) {
-        this.isdeleted = isdeleted;
-    }
-
-    public String getWhendeleted() {
-        return whendeleted;
-    }
-
-    public void setWhendeleted(String whendeleted) {
-        this.whendeleted = whendeleted;
-    }
-
     
-    
+
+    public boolean getState() {
+        return state;
+    }
+
+    public void setState(boolean state) {
+        this.state = state;
+    }
+
     
 }

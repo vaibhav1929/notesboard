@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class DBManager {
     Connection con;
     PreparedStatement insertAccount, updateAccount, loginAccount, emailAccount, notesInsert, notesUpdate, notesDelete,getNotesByUidStatment,getNotesByUidAndNidStatment,chkListInsert,chkListDelete,chkListUpdate,getChkListByUidStatment,getChkListByUidAndChklistidStatment;
-    PreparedStatement getGroupByGidStatement, getGroupByUidStatement, groupInsert;
+    PreparedStatement getGroupByGidStatement, getGroupByUidStatement, groupInsert, hiddenNotesFetch;
     
     public DBManager(){
         if(con == null){
@@ -38,13 +38,15 @@ public class DBManager {
                 //---------------------------------NOTES----------------------------------------------------
                 notesInsert = con.prepareStatement("INSERT INTO Notes(groupid,uid,title,type,content,colorcode) VALUES(?,?,?,?,?,?)",new String[]{"nid"});
                 
-                notesUpdate = con.prepareStatement("UPDATE Notes SET groupid = ?, uid = ?, title = ?, type = ?, content = ?, colorcode = ?, isdeleted = ? WHERE nid = ?");
+                notesUpdate = con.prepareStatement("UPDATE Notes SET groupid = ?, uid = ?, title = ?, type = ?, content = ?, colorcode = ?, isdeleted = ?, hidden = ? WHERE nid = ?");
                 
                 notesDelete = con.prepareStatement("DELETE FROM Notes WHERE nid = ?");
                 
-                getNotesByUidStatment = con.prepareStatement("SELECT * FROM Notes WHERE uid = ? ORDER BY groupid");
+                getNotesByUidStatment = con.prepareStatement("SELECT * FROM Notes WHERE uid = ? AND hidden=false ORDER BY groupid");
                 
                 getNotesByUidAndNidStatment = con.prepareStatement("SELECT * FROM Notes WHERE uid = ? AND nid = ?");
+                
+                hiddenNotesFetch = con.prepareStatement("SELECT * FROM Notes where uid = ?");
                
                 //--------------------------------GROUP-------------------------------------------------------
                 
@@ -60,9 +62,9 @@ public class DBManager {
                 
                 //---------------------------------CheckList----------------------------------------------------
                 
-                chkListInsert = con.prepareStatement("INSERT INTO CheckList(title,uid,items,states,colorcode) VALUES(?,?,?,?,?)");
+                chkListInsert = con.prepareStatement("INSERT INTO CheckList(title,uid,state) VALUES(?,?,?)");
                 
-                chkListUpdate = con.prepareStatement("UPDATE CheckList SET title = ?, uid = ?, items = ?, states = ?,colorcode=?, isdeleted = ?, whendeleted = ? WHERE chklistid = ?");
+                chkListUpdate = con.prepareStatement("UPDATE CheckList SET title = ?, uid = ?, state = ? WHERE chklistid = ?");
                 
                 chkListDelete = con.prepareStatement("DELETE FROM CheckList WHERE chklistid  = ?");
                 
@@ -86,15 +88,8 @@ public class DBManager {
             ResultSet set = getChkListByUidStatment.executeQuery();
             while(set.next()){
                 
-                if(set.getTimestamp("whendeleted") != null){
-                    CheckList temp = new CheckList(set.getInt("chklistid"),set.getString("title"),set.getInt("uid"),set.getString("items"),set.getString("states"),set.getString("colorcode"),set.getBoolean("isdeleted"), set.getTimestamp("whendeleted").toString());
+                    CheckList temp = new CheckList(set.getInt("chklistid"),set.getString("title"),set.getInt("uid"),set.getBoolean("state"));
                     ret.add(temp);
-                }
-                else{
-                    CheckList temp = new CheckList(set.getInt("chklistid"),set.getString("title"),set.getInt("uid"),set.getString("items"),set.getString("states"),set.getString("colorcode"),set.getBoolean("isdeleted"), null);
-                    ret.add(temp);
-                }
-                
                 
             }
         } catch (SQLException ex) {
@@ -107,10 +102,10 @@ public class DBManager {
         CheckList temp=new CheckList();
         try {
             getChkListByUidAndChklistidStatment.setInt(1, uid);
-            getChkListByUidAndChklistidStatment.setInt(2, nid);
+            getChkListByUidAndChklistidStatment.setInt(2, chklistid);
             ResultSet set = getChkListByUidAndChklistidStatment.executeQuery();
             while(set.next()){
-                 temp=new CheckList(set.getInt("chklistid"),set.getString("title"),set.getInt("uid"),set.getString("items"),set.getString("states"),set.getString("colorcode"),set.getBoolean("isdeleted"), set.getTimestamp("whendeleted").toString());
+                 temp = new CheckList(set.getInt("chklistid"),set.getString("title"),set.getInt("uid"),set.getBoolean("state"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -125,14 +120,8 @@ public class DBManager {
         try {
             chkListUpdate.setString(1, chklist.getTitle());
             chkListUpdate.setInt(2, chklist.getUid());
-            chkListUpdate.setString(3, chklist.getItems());
-            chkListUpdate.setString(4, chklist.getStates());
-            chkListUpdate.setString(5, chklist.getColorcode());
-            chkListUpdate.setBoolean(6, chklist.isIsdeleted());
-            Long miliseconds = Long.valueOf(chklist.getWhendeleted());
-            Timestamp ti = new Timestamp(miliseconds);
-            chkListUpdate.setTimestamp(7, ti);
-            chkListUpdate.setInt(8, chklist.getChklistid());
+            chkListUpdate.setBoolean(3, chklist.getState());
+            chkListUpdate.setInt(4, chklist.getChklistid());
             int rows = chkListUpdate.executeUpdate();
             return rows > 0;
         } catch (SQLException ex) {
@@ -147,9 +136,7 @@ public class DBManager {
             
             chkListInsert.setString(1, chklist.getTitle());
             chkListInsert.setInt(2, chklist.getUid());
-            chkListInsert.setString(3, chklist.getItems());
-            chkListInsert.setString(4, chklist.getStates());
-            chkListInsert.setString(5, chklist.getColorcode());
+            chkListInsert.setBoolean(3, chklist.getState());
             int rows = chkListInsert.executeUpdate();
            
             boolean isAdded = rows > 0;
@@ -360,6 +347,31 @@ public class DBManager {
         }
 
         */
+        
+         public ArrayList<Notes> getHiddenNotesByUid(int uid){
+            ArrayList<Notes> ret=new ArrayList<Notes>();
+            try {
+                hiddenNotesFetch.setInt(1, uid);
+                System.out.println(hiddenNotesFetch);
+                ResultSet set = hiddenNotesFetch.executeQuery();
+                while(set.next()){
+
+                    if(set.getTimestamp("whendeleted") != null){
+                        Notes temp = new Notes(set.getInt("nid"),set.getInt("groupid"),set.getInt("uid"),set.getString("title"),set.getString("type"),set.getString("content"),set.getString("colorcode"),set.getBoolean("isdeleted"), set.getTimestamp("whendeleted").toString(), getGroupByGid(set.getInt("groupid")));
+                        temp.setHidden(set.getBoolean("hidden"));
+                        ret.add(temp);
+                    }
+                    else{
+                        Notes temp = new Notes(set.getInt("nid"),set.getInt("groupid"),set.getInt("uid"),set.getString("title"),set.getString("type"),set.getString("content"),set.getString("colorcode"),set.getBoolean("isdeleted"), null, getGroupByGid(set.getInt("groupid")));
+                        temp.setHidden(set.getBoolean("hidden"));
+                        ret.add(temp);
+                    }
+                }
+            }
+            catch(Exception e){}
+            return ret;
+         }
+         
             public boolean updateUser(User user){
         try {
             updateAccount.setString(1, user.getName());
