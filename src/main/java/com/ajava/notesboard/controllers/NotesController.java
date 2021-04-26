@@ -62,7 +62,6 @@ public class NotesController extends HttpServlet {
                         note.setContent(request.getParameter("content"));
                         note.setGroupid(Integer.parseInt(request.getParameter("groupid")));
                         note.setUid(((User)request.getSession().getAttribute("user")).getUid());
-                        note.setColorcode("#FFFFFF");
                         note.setType("NOTE");                       
                         int id = dBManager.addNewNote(note);
                         if(id != -1){
@@ -102,7 +101,6 @@ public class NotesController extends HttpServlet {
                         oldNote.setContent(request.getParameter("content"));
                         oldNote.setGroupid(Integer.parseInt(request.getParameter("groupid")));
                         oldNote.setUid(((User)request.getSession().getAttribute("user")).getUid());
-                        oldNote.setColorcode("#FFFFFF");
                         oldNote.setType("NOTE"); 
                          System.out.println(oldNote);
                         boolean edited = dBManager.updateNote(oldNote);

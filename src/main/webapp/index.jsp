@@ -20,7 +20,11 @@
                 out.println("<script>swal({text:'"+request.getAttribute("error").toString()+"', icon:'error'});</script>");
             }
             
-           
+            if(request.getParameter("logout") != null){
+                if(session.getAttribute("user")!=null){
+                    session.removeAttribute("user");
+                }
+            }
             if(session.getAttribute("user")!=null){
                 response.sendRedirect("dashboard.jsp");
             }

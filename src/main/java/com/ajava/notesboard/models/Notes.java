@@ -22,15 +22,12 @@ public class Notes {
     String title;
     String type;
     String content;
-    String colorcode;
-    boolean isdeleted;
-    String whendeleted;
     NoteGroup group;
     boolean hidden;
     
     public Notes()
     {}
-    public Notes(int nid,int groupid,int uid,String title,String type,String content,String colorcode,boolean isdeleted,String whendeleted, NoteGroup group)
+    public Notes(int nid,int groupid,int uid,String title,String type,String content, NoteGroup group)
     {
         this.nid = nid;
         this.groupid = groupid;
@@ -38,9 +35,6 @@ public class Notes {
         this.title = title;
         this.type = type;
         this.content = content;
-        this.colorcode = colorcode;
-        this.isdeleted = isdeleted;
-        this.whendeleted = whendeleted;
         this.group = group;
 
     }
@@ -54,9 +48,7 @@ public class Notes {
             this.title = set.getString("title");
             this.type = set.getString("type");
             this.content = set.getString("content");
-            this.colorcode = set.getString("colorcode");
-            this.isdeleted = set.getBoolean("isdeleted");
-            this.whendeleted = set.getTimestamp("whendeleted").toString();
+            
             
         } catch (SQLException ex) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
@@ -88,18 +80,7 @@ public class Notes {
         return content;
     }
 
-    public String getColorcode() {
-        return colorcode;
-    }
-
-    public boolean isIsdeleted() {
-        return isdeleted;
-    }
-
-    public String getWhendeleted() {
-        return whendeleted;
-    }
-
+   
     public void setNid(int nid) {
         this.nid = nid;
     }
@@ -124,18 +105,6 @@ public class Notes {
         this.content = content;
     }
 
-    public void setColorcode(String colorcode) {
-        this.colorcode = colorcode;
-    }
-
-    public void setIsdeleted(boolean isdeleted) {
-        this.isdeleted = isdeleted;
-    }
-
-    public void setWhendeleted(String whendeleted) {
-        this.whendeleted = whendeleted;
-    }
-
     public NoteGroup getGroup() {
         return group;
     }
@@ -155,7 +124,7 @@ public class Notes {
     
     @Override
     public String toString() {
-        return "Notes{" + "nid=" + nid + ", groupid=" + groupid + ", uid=" + uid + ", title=" + title + ", type=" + type + ", content=" + content + ", colorcode=" + colorcode + ", isdeleted=" + isdeleted + ", whendeleted=" + whendeleted + ", hide=" + hidden + '}';
+        return "Notes{" + "nid=" + nid + ", groupid=" + groupid + ", uid=" + uid + ", title=" + title + ", type=" + type + ", content=" + content + ", hide=" + hidden + '}';
     }
     
     

@@ -48,12 +48,7 @@
               </a>
             </li>
             
-            <li class="nav-item">
-              <a class="nav-link" href="#bin" id="bin_item">
-                <i class="ni ni-basket text-yellow"></i>
-                <span class="nav-link-text">Recycle bin</span>
-              </a>
-            </li>
+            
           </ul>
         </div>
       </div>
@@ -96,12 +91,8 @@
                 <div class="dropdown-header noti-title">
                   <h6 class="text-overflow m-0">Welcome!</h6>
                 </div>
-                <a href="#!" class="dropdown-item">
-                  <i class="ni ni-single-02"></i>
-                  <span>My profile</span>
-                </a>
                 <div class="dropdown-divider"></div>
-                <a href="#!" class="dropdown-item">
+                <a href="index.jsp?logout=true" class="dropdown-item">
                   <i class="ni ni-user-run"></i>
                   <span>Logout</span>
                 </a>

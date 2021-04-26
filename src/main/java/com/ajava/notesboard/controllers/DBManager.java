@@ -36,9 +36,9 @@ public class DBManager {
                 emailAccount = con.prepareStatement("SELECT * FROM Users WHERE email = ?");
                 
                 //---------------------------------NOTES----------------------------------------------------
-                notesInsert = con.prepareStatement("INSERT INTO Notes(groupid,uid,title,type,content,colorcode) VALUES(?,?,?,?,?,?)",new String[]{"nid"});
+                notesInsert = con.prepareStatement("INSERT INTO Notes(groupid,uid,title,type,content) VALUES(?,?,?,?,?)",new String[]{"nid"});
                 
-                notesUpdate = con.prepareStatement("UPDATE Notes SET groupid = ?, uid = ?, title = ?, type = ?, content = ?, colorcode = ?, isdeleted = ?, hidden = ? WHERE nid = ?");
+                notesUpdate = con.prepareStatement("UPDATE Notes SET groupid = ?, uid = ?, title = ?, type = ?, content = ?,  hidden = ? WHERE nid = ?");
                 
                 notesDelete = con.prepareStatement("DELETE FROM Notes WHERE nid = ?");
                 
@@ -185,15 +185,8 @@ public class DBManager {
             ResultSet set = getNotesByUidStatment.executeQuery();
             while(set.next()){
                 
-                if(set.getTimestamp("whendeleted") != null){
-                    Notes temp = new Notes(set.getInt("nid"),set.getInt("groupid"),set.getInt("uid"),set.getString("title"),set.getString("type"),set.getString("content"),set.getString("colorcode"),set.getBoolean("isdeleted"), set.getTimestamp("whendeleted").toString(), getGroupByGid(set.getInt("groupid")));
-                    ret.add(temp);
-                }
-                else{
-                    Notes temp = new Notes(set.getInt("nid"),set.getInt("groupid"),set.getInt("uid"),set.getString("title"),set.getString("type"),set.getString("content"),set.getString("colorcode"),set.getBoolean("isdeleted"), null, getGroupByGid(set.getInt("groupid")));
-                    ret.add(temp);
-                }
-                
+                    Notes t = new Notes(set.getInt("nid"),set.getInt("groupid"),set.getInt("uid"),set.getString("title"),set.getString("type"),set.getString("content"), getGroupByGid(set.getInt("groupid")));
+                    ret.add(t);
                 
             }
         } catch (SQLException ex) {
@@ -208,7 +201,7 @@ public class DBManager {
             getNotesByUidAndNidStatment.setInt(2, nid);
             ResultSet set = getNotesByUidAndNidStatment.executeQuery();
             while(set.next()){
-                 temp=new Notes(set.getInt("nid"),set.getInt("groupid"),set.getInt("uid"),set.getString("title"),set.getString("type"),set.getString("content"),set.getString("colorcode"),set.getBoolean("isdeleted"),set.getTimestamp("whendeleted").toString(), getGroupByGid(set.getInt("groupid")));
+                 temp=new Notes(set.getInt("nid"),set.getInt("groupid"),set.getInt("uid"),set.getString("title"),set.getString("type"),set.getString("content"), getGroupByGid(set.getInt("groupid")));
             }
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -237,12 +230,9 @@ public class DBManager {
             notesUpdate.setString(3, note.getTitle());
             notesUpdate.setString(4, note.getType());
             notesUpdate.setString(5, note.getContent());
-            notesUpdate.setString(6, note.getColorcode());
-            notesUpdate.setBoolean(7, note.isIsdeleted());
-          /*Long miliseconds = Long.valueOf(note.getWhendeleted());
-            Timestamp ti = new Timestamp(miliseconds);
-            notesUpdate.setTimestamp(8, ti);*/
-            notesUpdate.setInt(8, note.getNid());
+            
+            notesUpdate.setBoolean(6, note.isHidden());
+            notesUpdate.setInt(7, note.getNid());
             System.out.println(note);
             int rows = notesUpdate.executeUpdate();
             return rows > 0;
@@ -263,7 +253,6 @@ public class DBManager {
                 notesInsert.setString(3, note.getTitle());
                 notesInsert.setString(4, note.getType());
                 notesInsert.setString(5, note.getContent());
-                notesInsert.setString(6, note.getColorcode());
                 int rows = notesInsert.executeUpdate();
 
                 boolean isAdded = rows > 0;
@@ -358,16 +347,10 @@ public class DBManager {
                 ResultSet set = hiddenNotesFetch.executeQuery();
                 while(set.next()){
 
-                    if(set.getTimestamp("whendeleted") != null){
-                        Notes temp = new Notes(set.getInt("nid"),set.getInt("groupid"),set.getInt("uid"),set.getString("title"),set.getString("type"),set.getString("content"),set.getString("colorcode"),set.getBoolean("isdeleted"), set.getTimestamp("whendeleted").toString(), getGroupByGid(set.getInt("groupid")));
+                        Notes temp = new Notes(set.getInt("nid"),set.getInt("groupid"),set.getInt("uid"),set.getString("title"),set.getString("type"),set.getString("content"), getGroupByGid(set.getInt("groupid")));
                         temp.setHidden(set.getBoolean("hidden"));
                         ret.add(temp);
-                    }
-                    else{
-                        Notes temp = new Notes(set.getInt("nid"),set.getInt("groupid"),set.getInt("uid"),set.getString("title"),set.getString("type"),set.getString("content"),set.getString("colorcode"),set.getBoolean("isdeleted"), null, getGroupByGid(set.getInt("groupid")));
-                        temp.setHidden(set.getBoolean("hidden"));
-                        ret.add(temp);
-                    }
+                    
                 }
             }
             catch(Exception e){}
