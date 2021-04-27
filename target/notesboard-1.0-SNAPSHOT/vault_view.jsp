@@ -95,10 +95,20 @@ else{%>
         </script>
         
         <% } %>
-        <div class="container m-2 justify-content-center">
-            <div id="HidNoteContainer" class="row bg-dark   rounded shadow"></div>
-            <div id="NormalNoteContainer" class="row"></div>
+        <div class="container ml-auto mr-auto mt-3">
+            <div class="row justify-content-center">
+                <div class="col-md-12">
+                    
+                    <div id="HidNoteContainer" class="row bg-dark rounded shadow">
+                        <h2 class="text-white m-2 col-md-12">Hidden Notes</h2>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <h2 class="m-2">Visible Notes</h2>
+                        <div id="NormalNoteContainer" class="row"></div>
+                </div>
             
+            </div>
         </div>
 </body>
 </html>
